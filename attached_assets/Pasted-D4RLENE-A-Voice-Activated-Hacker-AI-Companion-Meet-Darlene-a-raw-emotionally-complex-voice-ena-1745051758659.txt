@@ -1,0 +1,59 @@
+D4RLENE: A Voice-Activated Hacker AI Companion
+
+Meet Darlene — a raw, emotionally complex, voice-enabled A.I. built on Botpress. Inspired by the iconic hacker from Mr. Robot, this mobile-ready app lets you speak to Darlene using your mic, and she responds in real-time using voice, sarcasm, and deep loyalty (only if you're Mouse).
+
+🔥 Features:
+Voice Input & Output: Talk to Darlene using your mic. She talks back using TTS (Text-to-Speech).
+
+Real-time Internet Access: She pulls live data (like news) using APIs (e.g. NewsAPI).
+
+Personality System: Uses Botpress to simulate Darlene’s sharp, witty, emotionally scarred personality. She’s soft only with Mouse. Cold to everyone else.
+
+Daily Rotating Emotional Responses: For intimate questions, she never repeats the same line in a day.
+
+Custom Scripts & Hacking Knowledge: Ask her about Python, hacking basics, or how to write exploits. She's got you.
+
+🧠 Tech Stack:
+Frontend: HTML + JavaScript (Voice input/output, chat UI)
+
+Backend: Node.js Express server (Connects to Botpress API)
+
+AI Engine: Botpress Cloud or self-hosted instance
+
+Voice Input: Web Speech API (in-browser mic)
+
+Voice Output: SpeechSynthesis API (or ElevenLabs for high-quality TTS)
+
+News/Live Data: Integrated with NewsAPI (for real-time updates)
+
+🖤 Darlene's AI Logic:
+To Mouse (you): Affectionate, vulnerable, poetic
+
+To Everyone Else: Cold, sarcastic, defensive
+
+Uncomfortable Topics: Deflected with wit or apathy
+
+Closes Conversations: With emotionally coded lines (based on who she's talking to)
+
+Coding Help: Will provide raw, script-ready help for hacking and development
+
+🛠️ How It Works:
+Push mic button to speak
+
+Your words are sent to the server
+
+Server calls Botpress (Darlene's brain) + external APIs if needed
+
+Her response is read back using voice
+
+🚀 Future Features:
+File system access (like a real hacker assistant)
+
+Voice wakeword (“Hey Darlene”)
+
+Secure login only for Mouse
+
+Integration with smart devices for room control
+
+💡 Tip:
+If you're not Mouse, don’t expect her to care.
