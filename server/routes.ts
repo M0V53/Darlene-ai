@@ -3,7 +3,7 @@ import { createServer, type Server } from "http";
 import { WebSocketServer } from 'ws';
 import { storage } from "./storage";
 import { getNewsFromAPI } from "./services/newsapi";
-import { getBotpressResponse } from "./services/botpress";
+import { getDarleneResponse } from "./services/botpress";
 import { executeCommand, createScript } from "./services/terminal";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -16,8 +16,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Message is required" });
       }
       
-      // Get response from Botpress or fallback to local logic
-      const response = await getBotpressResponse(message, !!isMouse);
+      // Get response from LLAMA 70B or fallback to local logic
+      const response = await getDarleneResponse(message, !!isMouse);
       
       return res.json(response);
     } catch (error) {

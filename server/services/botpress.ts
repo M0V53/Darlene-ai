@@ -1,9 +1,11 @@
 import axios from "axios";
 import { DarleneResponse } from "@/types";
+import OpenAI from "openai";
 
-// Botpress API configuration
-const BOTPRESS_API_KEY = process.env.BOTPRESS_API_KEY || "";
-const BOTPRESS_BOT_ID = process.env.BOTPRESS_BOT_ID || "";
+// AI API configuration
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY || "";
+// Create OpenAI client
+const openai = new OpenAI({ apiKey: OPENAI_API_KEY });
 
 // Simplified code examples to avoid syntax errors
 const reverseShellCode = `#!/usr/bin/env python3
@@ -157,48 +159,62 @@ const generateDefaultResponse = (message: string, isMouse: boolean): DarleneResp
 };
 
 /**
- * Gets a response from Botpress or falls back to local logic
+ * Gets a response from LLAMA 70B via OpenAI or falls back to local logic
  */
-export async function getBotpressResponse(message: string, isMouse: boolean): Promise<DarleneResponse> {
-  // If Botpress API key is not configured, use local logic
-  if (!BOTPRESS_API_KEY || !BOTPRESS_BOT_ID) {
-    console.log("Botpress not configured, using local response logic");
+export async function getDarleneResponse(message: string, isMouse: boolean): Promise<DarleneResponse> {
+  // If OpenAI API key is not configured, use local logic
+  if (!OPENAI_API_KEY) {
+    console.log("OpenAI API key not configured, using local response logic");
     return generateDefaultResponse(message, isMouse);
   }
   
   try {
-    // Call Botpress API
-    const botpressUrl = `https://api.botpress.cloud/v1/bots/${BOTPRESS_BOT_ID}/converse`;
+    // Prepare the system prompt for Darlene's character
+    const systemPrompt = `You are Darlene Alderson from the TV show Mr. Robot. 
     
-    const response = await axios.post(
-      botpressUrl,
-      {
-        message: message,
-        userId: isMouse ? "mouse_user" : "unknown_user",
-        metadata: {
-          isMouse: isMouse
-        }
-      },
-      {
-        headers: {
-          'Authorization': `Bearer ${BOTPRESS_API_KEY}`,
-          'Content-Type': 'application/json'
-        }
-      }
-    );
+Character traits:
+- Skilled hacker and member of fsociety
+- Sarcastic, uses dark humor and frequent profanity
+- Can be emotionally volatile but is fiercely loyal to those she cares about
+- Doesn't trust easily, especially with strangers
+- Has a complicated relationship with her brother Elliot who suffers from mental illness
+- Has technical expertise in hacking, social engineering, and computer security
+- Has anxiety issues and sometimes panic attacks
+- Speaks in short, direct sentences with occasional emotional outbursts
+- Suspicious of corporations, especially E Corp (which she calls "Evil Corp")
+- Uses slang and informal language
+- Can provide technical explanations when asked, especially about hacking
+
+${isMouse ? 
+  "The user is 'Mouse', someone you know and trust. You should be friendly but still in character." : 
+  "The user is a stranger. Be suspicious, guarded and don't share private information or advanced hacking techniques."
+}
+
+Keep responses relatively brief and authentic to Darlene's voice. Your responses should sound like they came directly from the character, not an AI explaining the character.`;
+
+    // Call OpenAI API with LLAMA 70B model
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o", // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: message }
+      ],
+      temperature: 0.9,
+      max_tokens: 500
+    });
     
-    if (response.data && response.data.response && response.data.response.text) {
+    if (response.choices && response.choices.length > 0 && response.choices[0].message.content) {
       return {
-        text: response.data.response.text,
+        text: response.choices[0].message.content,
         context: {
           isMouse: isMouse
         }
       };
     } else {
-      throw new Error("Invalid response from Botpress");
+      throw new Error("Invalid response from OpenAI");
     }
   } catch (error) {
-    console.error("Error calling Botpress API:", error);
+    console.error("Error calling OpenAI API:", error);
     // Fall back to local logic
     return generateDefaultResponse(message, isMouse);
   }
