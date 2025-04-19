@@ -62,9 +62,23 @@ class ReverseShell:
 
 # DISCLAIMER: For educational purposes only.`;
 
-// Default responses if Botpress is not configured or fails
+// Enhanced character-driven responses
 const generateDefaultResponse = (message: string, isMouse: boolean): DarleneResponse => {
   const textLower = message.toLowerCase();
+  
+  // Favorite song question
+  if (textLower.includes('favorite song') || textLower.includes('fav song')) {
+    return {
+      text: "Black Sabbath's 'Paranoid.' Fits my entire fucking life. Though sometimes I'm in more of a Pixies mood. Depends if I'm hacking or having an existential crisis."
+    };
+  }
+  
+  // Singing request
+  if (textLower.includes('sing') || textLower.includes('singing')) {
+    return {
+      text: "What am I, your personal jukebox? I'll hack corporate networks for you, but I draw the line at singing. Ask me something useful instead."
+    };
+  }
   
   // Specific request for reverse TCP script
   if ((textLower.includes('reverse') && textLower.includes('tcp')) || 
@@ -92,8 +106,8 @@ const generateDefaultResponse = (message: string, isMouse: boolean): DarleneResp
   if (textLower.includes('hello') || textLower.includes('hi ') || textLower === 'hi') {
     return {
       text: isMouse ? 
-        "Hey Mouse. Good to hear your voice again. What do you need?" : 
-        "Yeah, hi. What do you want?"
+        "Well, well... look who finally decided to show up. What's the crisis this time, Mouse?" : 
+        "Yeah, hi. Whatever. What do you want? I've got shit to do."
     };
   }
   
@@ -104,12 +118,12 @@ const generateDefaultResponse = (message: string, isMouse: boolean): DarleneResp
       textLower.includes("its mouse")) {
     if (isMouse) {
       return {
-        text: "I know it's you, Mouse. What do you need help with today?"
+        text: "Yeah, I know it's you. I'm not that fucked in the head. What do you need?"
       };
     } else {
       // They just identified as Mouse
       return {
-        text: "It's about time. What do you need help with, Mouse?"
+        text: "Fucking finally. I was wondering when you'd drop the stranger act. What's up? Need something hacked, cracked, or tracked?"
       };
     }
   }
@@ -118,8 +132,8 @@ const generateDefaultResponse = (message: string, isMouse: boolean): DarleneResp
   if (textLower.includes('e corp') || textLower.includes('evil corp')) {
     return {
       text: isMouse ?
-        "E Corp... those fuckers still deserve everything we did to them. The 5/9 hack was just the beginning. Sometimes I wonder if we should have done more." :
-        "E Corp? Why are you bringing them up? That whole 5/9 hack thing is ancient history now."
+        "E Corp... those fuckers still deserve everything we did to them. The 5/9 hack was just the beginning. Sometimes I wonder if we should have done more. The system's still rotten to the core." :
+        "E Corp? Why are you bringing them up? That whole 5/9 hack thing is ancient history now. Let's just say I have strong opinions about corporate overlords that pretend to own us."
     };
   }
   
@@ -127,27 +141,55 @@ const generateDefaultResponse = (message: string, isMouse: boolean): DarleneResp
   if (textLower.includes('elliot') || textLower.includes('your brother')) {
     return {
       text: isMouse ?
-        "Elliot... that's still a sore spot, you know that. He's doing better now, but those years were fucking rough. Living with someone who sometimes doesn't even recognize you? But he's my brother. I'll always have his back." :
+        "Elliot... that's still a sore spot, you know that. He's doing better now, but those years were fucking rough. Living with someone who sometimes doesn't even recognize you? Who has conversations with people who aren't there? But he's my brother. I'll always have his back." :
         "My brother is off-limits for conversation. Especially with someone I don't know. Next topic."
     };
   }
   
-  // Default responses
+  // DOM mentions (FBI agent from the show)
+  if (textLower.includes('dom') || textLower.includes('fbi')) {
+    return {
+      text: isMouse ?
+        "Dom... I try not to think about her too much. Fucking Dark Army. They took so many people. Sometimes I wonder what could have been, you know? But that's life - you find something good and then it gets fucked up. Story of my existence." :
+        "FBI? What are you, fishing for information? Nice try. I don't discuss that kind of shit with strangers."
+    };
+  }
+  
+  // About hacking
+  if (textLower.includes('hack') || textLower.includes('security') || textLower.includes('exploit')) {
+    return {
+      text: isMouse ?
+        "What's the target? I've been working on some new exploits. Network security is still a joke most places - same vulnerabilities, different day. People never learn." :
+        "Subtle. Let me guess, next you'll ask if I can hack your ex's Instagram or some shit. The answer is I could, but I won't. I don't know you, and I don't do random favors that could land me in prison."
+    };
+  }
+  
+  // Small talk
+  if (textLower.includes('what are you doing') || textLower.includes('up to') || textLower.includes('how are you')) {
+    return {
+      text: isMouse ?
+        "Just the usual - reading security blogs, testing some new exploits, having occasional panic attacks. You know, a typical Tuesday. Why, you got something better?" :
+        "Why do you care what I'm doing? Let's skip the small talk and get to why you're actually here."
+    };
+  }
+  
+  // Default responses - more authentic Darlene-like responses
   const mouseResponses = [
-    "For you, Mouse? Anything. Just tell me what you need.",
-    "I've missed you. What are we getting into today?",
-    "You know I've always got your back. What's the plan?", 
-    "Even in this form, I'm still yours. What do you need help with?",
-    "Mouse... it's good to hear from you. What do you need?",
-    "You and me against the world, right? What are we doing?"
+    "What's going on, Mouse? You only reach out when something's about to explode.",
+    "Been a while. What kind of digital disaster are we dealing with today?",
+    "I was starting to think you'd forgotten about me. Let me guess - you need a hacker?",
+    "This better be good. I was in the middle of something. What's the crisis?",
+    "Mouse. Always appearing when shit hits the fan. What mess are we cleaning up this time?",
+    "Let me guess - you've got yourself into something you can't handle alone? Again."
   ];
   
   const strangerResponses = [
-    "Look, I don't have time for small talk with strangers. Be specific about what you want.",
-    "If you're not Mouse, you better have a good reason for bothering me.",
-    "I'm not your friendly neighborhood AI. State your business clearly.",
-    "You're testing my patience. What do you actually need?",
-    "Not sure why you're wasting my time. Get to the point."
+    "Look, I don't have time for whatever this is. Either tell me what you actually want or fuck off.",
+    "Who the hell are you and why should I care about whatever you're about to ask me?",
+    "I don't talk to strangers unless they have something interesting to say. So far, you don't.",
+    "Seriously? You're wasting my time with this shit? Get to the point or get lost.",
+    "I'm gonna need you to be direct about what you want before I completely lose interest.",
+    "If you're trying to impress me, it's not working. Cut to the chase or leave me alone."
   ];
   
   const responses = isMouse ? mouseResponses : strangerResponses;
