@@ -1,11 +1,30 @@
 import { useState, useEffect } from "react";
-import { Lightbulb, DoorOpen, TvIcon, Thermometer, Lock, Fan } from "lucide-react";
+import { Lightbulb, DoorOpen, TvIcon, Thermometer, Lock, Fan, Clock, Plus } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useChat } from "@/context/ChatContext";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+
+interface Scene {
+  name: string;
+  actions: Array<{
+    device: string;
+    action: string;
+    value?: number;
+  }>;
+}
+
+interface Schedule {
+  device: string;
+  action: string;
+  time: string;
+  days: string[];
+  value?: number;
+}
 
 interface DeviceState {
   name: string;
