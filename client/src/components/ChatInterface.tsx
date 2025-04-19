@@ -51,8 +51,6 @@ const ChatInterface = () => {
       {/* Main chat area */}
       <div className="flex-1 flex relative overflow-hidden">
         <ChatArea />
-        <CommandHistory history={commandHistory} onReplay={replayCommand} />
-        <SystemMonitor />
         
         {/* Smart Device Control Panel */}
         <div 

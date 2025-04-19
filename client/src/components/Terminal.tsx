@@ -78,40 +78,9 @@ const Terminal = ({ visible }: TerminalProps) => {
         '  mkdir <dir> - Create directory',
         '  rm <file>   - Remove file',
         '  script <name> <lang> - Create a new script in specified language',
-        '  run <code>  - Execute code snippet',
-        '  sys        - Show system resource usage',
-        '  net        - Show network status',
         '  * Any other command will be executed directly in the shell',
         ''
       ]);
-      return;
-    }
-
-    // Handle code execution
-    if (cmd === 'run') {
-      const code = args.join(' ');
-      if (!code) {
-        setHistory(prev => [...prev, 'Error: No code provided']);
-        return;
-      }
-
-      try {
-        setIsProcessing(true);
-        const response = await apiRequest('POST', '/api/terminal/execute', {
-          command: code,
-          directory: currentDirectory
-        });
-        
-        const data = await response.json();
-        if (data.output) {
-          const outputLines = data.output.split('\n');
-          setHistory(prev => [...prev, ...outputLines]);
-        }
-      } catch (error) {
-        setHistory(prev => [...prev, `Error executing code: ${error instanceof Error ? error.message : String(error)}`]);
-      } finally {
-        setIsProcessing(false);
-      }
       return;
     }
 
