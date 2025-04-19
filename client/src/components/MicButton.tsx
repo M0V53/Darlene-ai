@@ -1,7 +1,17 @@
 import { useChat } from "@/context/ChatContext";
+import { Mic, Ear, EarOff, Waves } from "lucide-react";
+import { Tooltip } from "@/components/ui/tooltip";
+import { TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 const MicButton = () => {
-  const { isListening, startListening, stopListening } = useChat();
+  const { 
+    isListening, 
+    isWakeWordActive, 
+    wakeWordDetected,
+    startListening, 
+    stopListening,
+    toggleWakeWord 
+  } = useChat();
 
   const handleMicButtonClick = () => {
     if (isListening) {
@@ -12,28 +22,42 @@ const MicButton = () => {
   };
 
   return (
-    <div className="fixed bottom-20 right-4">
+    <div className="fixed bottom-20 right-4 flex flex-col space-y-4 items-center">
+      {/* Wake Word Toggle Button */}
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <button 
+              className={`w-10 h-10 rounded-full ${isWakeWordActive ? 'bg-emerald-500' : 'bg-gray-700'} text-white flex items-center justify-center shadow-lg focus:outline-none hover:bg-opacity-80 transition-colors`}
+              onClick={toggleWakeWord}
+              aria-label={isWakeWordActive ? "Disable wake word" : "Enable wake word"}
+            >
+              {isWakeWordActive ? (
+                <Ear className="h-5 w-5" />
+              ) : (
+                <EarOff className="h-5 w-5" />
+              )}
+            </button>
+          </TooltipTrigger>
+          <TooltipContent side="left">
+            {isWakeWordActive ? "Wake word active: 'Hey Darlene'" : "Enable wake word detection"}
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+
+      {/* Mic Button */}
       <button 
         id="micButton" 
-        className={`relative w-14 h-14 rounded-full bg-hacker-blue text-white flex items-center justify-center shadow-lg focus:outline-none hover:bg-opacity-80 ${isListening ? 'mic-active' : ''}`}
+        className={`relative w-14 h-14 rounded-full bg-hacker-blue text-white flex items-center justify-center shadow-lg focus:outline-none hover:bg-opacity-80 ${isListening ? 'mic-active' : ''} ${wakeWordDetected ? 'bg-purple-600' : ''}`}
         onClick={handleMicButtonClick}
         aria-label={isListening ? "Stop listening" : "Start listening"}
       >
-        <div className="mic-button-ripple"></div>
-        <svg 
-          xmlns="http://www.w3.org/2000/svg" 
-          className="h-6 w-6" 
-          fill="none" 
-          viewBox="0 0 24 24" 
-          stroke="currentColor"
-        >
-          <path 
-            strokeLinecap="round" 
-            strokeLinejoin="round" 
-            strokeWidth="2" 
-            d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" 
-          />
-        </svg>
+        <div className={`mic-button-ripple ${wakeWordDetected ? 'wake-word-ripple' : ''}`}></div>
+        {wakeWordDetected ? (
+          <Waves className="h-6 w-6 animate-pulse" />
+        ) : (
+          <Mic className="h-6 w-6" />
+        )}
       </button>
     </div>
   );
