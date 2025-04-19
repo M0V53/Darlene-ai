@@ -4,11 +4,14 @@ import ChatArea from "./ChatArea";
 import InputArea from "./InputArea";
 import MicButton from "./MicButton";
 import VolumeIndicator from "./VolumeIndicator";
+import Terminal from "./Terminal";
+import TerminalToggle from "./TerminalToggle";
 import { useChat } from "@/context/ChatContext";
-import textToSpeech from "@/lib/textToSpeech";
+import { useTerminal } from "@/context/TerminalContext";
 
 const ChatInterface = () => {
   const { isSpeaking } = useChat();
+  const { isTerminalOpen, toggleTerminal } = useTerminal();
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Set body styles to match design reference
@@ -32,13 +35,15 @@ const ChatInterface = () => {
   return (
     <div 
       ref={containerRef}
-      className="flex flex-col h-screen"
+      className={`flex flex-col h-screen ${isTerminalOpen ? 'terminal-open' : ''}`}
     >
       <Header />
       <ChatArea />
       <InputArea />
       <MicButton />
       {isSpeaking && <VolumeIndicator />}
+      <Terminal visible={isTerminalOpen} />
+      <TerminalToggle isOpen={isTerminalOpen} toggle={toggleTerminal} />
     </div>
   );
 };
