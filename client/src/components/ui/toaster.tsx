@@ -1,3 +1,5 @@
+"use client";
+import { Toaster } from "sonner";
 import { useToast } from "@/hooks/use-toast"
 import {
   Toast,
@@ -7,7 +9,7 @@ import {
   ToastTitle,
   ToastViewport,
 } from "@/components/ui/toast"
-
+export default Toaster;
 export function Toaster() {
   const { toasts } = useToast()
 
